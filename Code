@@ -1,0 +1,99 @@
+class CropSoilManagementSystem:
+  def __init__(self):
+      self.soil_data = {}
+      self.crop_data = {
+          "Wheat": {"soil_type": "Loamy", "water_needs": "Medium", "climate": "Cool"},
+          "Rice": {"soil_type": "Clay", "water_needs": "High", "climate": "Warm"},
+          "Maize": {"soil_type": "Sandy", "water_needs": "Low", "climate": "Moderate"},
+      }
+      self.diseases = {
+          "Blight": {"crops_affected": ["Potato", "Tomato"], "treatment": "Use fungicides"},
+          "Rust": {"crops_affected": ["Wheat", "Barley"], "treatment": "Use resistant varieties"},
+      }
+
+  def add_soil_data(self, field_name, soil_type, pH, moisture):
+      self.soil_data[field_name] = {"soil_type": soil_type, "pH": pH, "moisture": moisture}
+      print(f"Soil data added for field: {field_name}")
+
+  def recommend_crop(self, field_name):
+      if field_name not in self.soil_data:
+          print("Soil data not found for this field.")
+          return
+
+      soil_info = self.soil_data[field_name]
+      recommendations = []
+      for crop, details in self.crop_data.items():
+          if details["soil_type"] == soil_info["soil_type"]:
+              recommendations.append(crop)
+
+      if recommendations:
+          print(f"Recommended crops for {field_name} based on soil type: {', '.join(recommendations)}")
+      else:
+          print("No crop recommendations available for this soil type.")
+
+  def identify_disease(self, crop_name, symptoms):
+      for disease, info in self.diseases.items():
+          if crop_name in info["crops_affected"]:
+              print(f"Possible disease: {disease}. Recommended treatment: {info['treatment']}")
+              return
+      print("Disease not found or not in the database.")
+
+  def get_fertilizer_recommendation(self, field_name):
+      if field_name not in self.soil_data:
+          print("Soil data not found for this field.")
+          return
+
+      soil_info = self.soil_data[field_name]
+      if soil_info["pH"] < 6.0:
+          print("Recommendation: Add lime to increase soil pH.")
+      elif soil_info["pH"] > 7.5:
+          print("Recommendation: Add sulfur to decrease soil pH.")
+      else:
+          print("Soil pH is within the optimal range. No adjustments needed.")
+
+      if soil_info["moisture"] < 30:
+          print("Recommendation: Increase irrigation to improve soil moisture.")
+      else:
+          print("Soil moisture is adequate.")
+
+def main():
+  system = CropSoilManagementSystem()
+
+  while True:
+      print("\nCrop and Soil Management System")
+      print("1. Add Soil Data")
+      print("2. Recommend Crop")
+      print("3. Identify Disease")
+      print("4. Get Fertilizer Recommendation")
+      print("5. Exit")
+      choice = int(input("Enter your choice: "))
+
+      if choice == 1:
+          field_name = input("Enter field name: ")
+          soil_type = input("Enter soil type (Loamy, Clay, Sandy): ")
+          pH = float(input("Enter soil pH: "))
+          moisture = int(input("Enter soil moisture (%): "))
+          system.add_soil_data(field_name, soil_type, pH, moisture)
+
+      elif choice == 2:
+          field_name = input("Enter field name: ")
+          system.recommend_crop(field_name)
+
+      elif choice == 3:
+          crop_name = input("Enter crop name: ")
+          symptoms = input("Enter observed symptoms: ")
+          system.identify_disease(crop_name, symptoms)
+
+      elif choice == 4:
+          field_name = input("Enter field name: ")
+          system.get_fertilizer_recommendation(field_name)
+
+      elif choice == 5:
+          print("Exiting system.")
+          break
+
+      else:
+          print("Invalid choice. Please try again.")
+
+if __name__ == "__main__":
+  main()
